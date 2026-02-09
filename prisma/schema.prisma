@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Technician {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  records   FillRecord[]
+}
+
+model Cart {
+  id        String   @id @default(uuid())
+  name      String   @unique // e.g., "2A"
+  floor     String   // e.g., "2" derived from name or explicit
+  records   FillRecord[]
+}
+
+model FillRecord {
+  id           String     @id @default(uuid())
+  cartId       String
+  technicianId String
+  startTime    DateTime   @default(now())
+  endTime      DateTime?
+  duration     Int?       // Duration in seconds
+  status       String     @default("IN_PROGRESS") // "IN_PROGRESS", "COMPLETED"
+  date         DateTime   @default(now()) // For easy daily filtering
+
+  cart         Cart       @relation(fields: [cartId], references: [id])
+  technician   Technician @relation(fields: [technicianId], references: [id])
+}
