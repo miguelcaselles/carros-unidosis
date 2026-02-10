@@ -1,6 +1,13 @@
 import prisma from '@/lib/prisma'
 import { NextResponse } from 'next/server'
 
+function formatDuration(seconds: number | null): string {
+    if (seconds == null) return '-'
+    const m = Math.floor(seconds / 60)
+    const s = seconds % 60
+    return `${m}:${s.toString().padStart(2, '0')}`
+}
+
 export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url)
@@ -40,7 +47,7 @@ export async function GET(request: Request) {
                 technicianName: record?.technician?.name || '-',
                 startTime: record?.startTime ? new Date(record.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '-',
                 endTime: record?.endTime ? new Date(record.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '-',
-                duration: record?.duration ? `${record.duration}s` : '-',
+                duration: record?.duration ? formatDuration(record.duration) : '-',
             }
         }))
 

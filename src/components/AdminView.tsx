@@ -14,6 +14,7 @@ import {
     Activity, BarChart3, Search,
     ArrowUpRight, AlertCircle, LayoutDashboard
 } from "lucide-react"
+import ExportDialog from "@/components/ExportDialog"
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line
 } from 'recharts'
@@ -55,6 +56,13 @@ type Technician = {
     id: string
     name: string
     active: boolean
+}
+
+function formatDuration(seconds: number | null | undefined): string {
+    if (seconds == null || seconds === 0) return '-'
+    const m = Math.floor(seconds / 60)
+    const s = seconds % 60
+    return `${m}:${s.toString().padStart(2, '0')}`
 }
 
 export default function AdminView() {
@@ -246,7 +254,7 @@ export default function AdminView() {
                             <Clock className="h-4 w-4 text-violet-500" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold text-foreground">{data?.stats.avgDuration || 0}s</div>
+                            <div className="text-2xl font-bold text-foreground">{formatDuration(data?.stats.avgDuration)}</div>
                             <p className="mt-1 text-xs text-muted-foreground">Por carro hoy</p>
                         </CardContent>
                     </Card>
@@ -323,6 +331,9 @@ export default function AdminView() {
 
                     {/* ANALYTICS TAB */}
                     <TabsContent value="analytics" className="space-y-4">
+                        <div className="flex justify-end">
+                            <ExportDialog technicians={technicians} />
+                        </div>
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                             <Card>
                                 <CardHeader>
@@ -348,7 +359,7 @@ export default function AdminView() {
                             <Card>
                                 <CardHeader>
                                     <CardTitle>Eficiencia Promedio</CardTitle>
-                                    <CardDescription>Tiempo medio de llenado por día (segundos)</CardDescription>
+                                    <CardDescription>Tiempo medio de llenado por día</CardDescription>
                                 </CardHeader>
                                 <CardContent className="h-[300px]">
                                     <ResponsiveContainer width="100%" height="100%">
@@ -359,7 +370,7 @@ export default function AdminView() {
                                             <Tooltip
                                                 contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
                                             />
-                                            <Line type="monotone" dataKey="avgTime" name="Tiempo Medio (s)" stroke="#6796ff" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                                            <Line type="monotone" dataKey="avgTime" name="Tiempo Medio" stroke="#6796ff" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
                                         </LineChart>
                                     </ResponsiveContainer>
                                 </CardContent>
@@ -382,7 +393,7 @@ export default function AdminView() {
                                         <div className="h-10 w-px bg-white/20" />
                                         <div>
                                             <p className="text-xs uppercase tracking-wider text-blue-100/80">Tiempo</p>
-                                            <p className="text-xl font-bold font-mono text-emerald-200">{data?.stats.fastestRecord ? `${data.stats.fastestRecord.duration}s` : "-"}</p>
+                                            <p className="text-xl font-bold font-mono text-emerald-200">{data?.stats.fastestRecord ? formatDuration(data.stats.fastestRecord.duration) : "-"}</p>
                                         </div>
                                     </div>
                                 </CardContent>
