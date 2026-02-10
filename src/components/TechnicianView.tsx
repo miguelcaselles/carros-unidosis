@@ -322,12 +322,11 @@ export default function TechnicianView() {
                                                         "w-full transition-all",
                                                         isMyRecord
                                                             ? "lavender-accent text-white shadow-[0_12px_24px_-16px_rgba(89,106,255,0.85)] hover:brightness-105"
-                                                            : "border border-white/70 bg-white/45 text-muted-foreground hover:bg-white/65"
+                                                            : "border border-blue-300/70 bg-blue-50/55 text-blue-700 hover:bg-blue-100/65"
                                                     )}
-                                                    onClick={() => isMyRecord ? handleComplete(cart) : toast.error("Este carro lo está llenando otro compañero")}
-                                                    disabled={!isMyRecord}
+                                                    onClick={() => handleComplete(cart)}
                                                 >
-                                                    {isMyRecord ? "Terminar Carro" : "Ocupado"}
+                                                    Terminar Carro
                                                 </Button>
                                             ) : !isCompleted && (
                                                 <Button
