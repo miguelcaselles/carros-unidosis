@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/sonner";
 
 export default function AdminPage() {
     return (
-        <main>
+        <main className="min-h-screen">
             <AdminView />
             <Toaster />
         </main>

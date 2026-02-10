@@ -60,7 +60,7 @@ export default function TechnicianView() {
 
             if (techsRes.ok) setTechnicians(await techsRes.json())
             if (cartsRes.ok) setCarts(await cartsRes.json())
-        } catch (error) {
+        } catch {
             toast.error("Error cargando datos")
         } finally {
             setLoading(false)
@@ -102,7 +102,7 @@ export default function TechnicianView() {
             } else {
                 toast.error("Error al iniciar")
             }
-        } catch (error) {
+        } catch {
             toast.error("Error de conexión")
         }
     }
@@ -123,7 +123,7 @@ export default function TechnicianView() {
                 toast.success(`Carro ${cart.name} terminado!`)
                 fetchData()
             }
-        } catch (error) {
+        } catch {
             toast.error("Error al completar")
         }
     }
@@ -155,40 +155,40 @@ export default function TechnicianView() {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-screen bg-slate-50">
-                <Loader2 className="animate-spin h-10 w-10 text-blue-600" />
+            <div className="flex h-screen items-center justify-center">
+                <Loader2 className="h-10 w-10 animate-spin text-primary" />
             </div>
         )
     }
 
     return (
-        <div className="min-h-screen bg-slate-50/50 pb-12">
+        <div className="min-h-screen pb-12">
             {/* Glass-morphism Header */}
-            <header className="sticky top-0 z-30 w-full border-b bg-white/80 backdrop-blur-md supports-[backdrop-filter]:bg-white/60">
+            <header className="sticky top-0 z-30 w-full border-b border-white/60 bg-white/50 backdrop-blur-xl">
                 <div className="container mx-auto max-w-7xl h-20 flex items-center justify-between px-4 sm:px-8">
                     <div className="flex items-center gap-3">
-                        <div className="bg-blue-600 p-2 rounded-xl shadow-lg shadow-blue-200">
+                        <div className="lavender-accent rounded-xl p-2 shadow-[0_16px_30px_-16px_rgba(89,106,255,0.8)]">
                             <Stethoscope className="h-6 w-6 text-white" />
                         </div>
                         <div>
-                            <h1 className="text-xl font-bold text-slate-900 leading-none">Estación de Enfermería</h1>
-                            <p className="text-sm text-slate-500 font-medium">Gestión de Unidosis</p>
+                            <h1 className="text-xl font-bold text-foreground leading-none">Estación de Enfermería</h1>
+                            <p className="text-sm text-muted-foreground font-medium">Gestión de Unidosis</p>
                         </div>
                     </div>
 
                     <div className="flex items-center gap-4">
                         <div className="hidden md:flex flex-col items-end mr-4">
-                            <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Fecha</span>
-                            <span className="text-sm font-medium text-slate-700 flex items-center gap-1">
+                            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Fecha</span>
+                            <span className="text-sm font-medium text-foreground flex items-center gap-1">
                                 <CalendarDays className="h-3.5 w-3.5" />
                                 {new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}
                             </span>
                         </div>
 
-                        <div className="flex items-center gap-2 bg-green-50 text-green-700 px-3 py-1.5 rounded-full border border-green-100 shadow-sm">
+                        <div className="flex items-center gap-2 rounded-full border border-emerald-200/70 bg-emerald-100/45 px-3 py-1.5 text-emerald-700 backdrop-blur-sm">
                             <span className="relative flex h-2.5 w-2.5">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
                             </span>
                             <span className="text-xs font-bold tracking-wide">EN LÍNEA</span>
                         </div>
@@ -200,13 +200,13 @@ export default function TechnicianView() {
 
                 {/* Welcome / Stats Bar */}
                 {lastSelectedTech && (
-                    <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-6 text-white shadow-xl shadow-blue-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 rounded-2xl border border-white/50 bg-gradient-to-r from-[#8e7dff]/95 to-[#6796ff]/95 p-6 text-white shadow-[0_24px_50px_-32px_rgba(89,106,255,0.85)]">
                         <div>
                             <h2 className="text-2xl font-bold">Hola, colaborador 👋</h2>
                             <p className="text-blue-100">Tienes <span className="font-bold text-white">{myActiveCarts}</span> carros en curso ahora mismo.</p>
                         </div>
                         {myActiveCarts > 0 && (
-                            <div className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg border border-white/20 flex items-center gap-3">
+                            <div className="flex items-center gap-3 rounded-lg border border-white/30 bg-white/14 px-4 py-2 backdrop-blur-sm">
                                 <Activity className="h-5 w-5 text-blue-200 animate-pulse" />
                                 <span className="font-medium">Tu actividad está siendo registrada</span>
                             </div>
@@ -216,17 +216,17 @@ export default function TechnicianView() {
 
                 <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="space-y-6">
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <TabsList className="bg-white p-1 shadow-sm border border-slate-200 h-11 w-full sm:w-auto">
-                            <TabsTrigger value="all" className="data-[state=active]:bg-slate-100 data-[state=active]:text-slate-900">Todos</TabsTrigger>
-                            <TabsTrigger value="in-progress" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">En Curso</TabsTrigger>
-                            <TabsTrigger value="pending" className="data-[state=active]:bg-slate-100 data-[state=active]:text-slate-900">Pendientes</TabsTrigger>
-                            <TabsTrigger value="completed" className="data-[state=active]:bg-green-50 data-[state=active]:text-green-700">Completados</TabsTrigger>
+                        <TabsList className="h-11 w-full sm:w-auto">
+                            <TabsTrigger value="all">Todos</TabsTrigger>
+                            <TabsTrigger value="in-progress">En Curso</TabsTrigger>
+                            <TabsTrigger value="pending">Pendientes</TabsTrigger>
+                            <TabsTrigger value="completed">Completados</TabsTrigger>
                             {lastSelectedTech && (
-                                <TabsTrigger value="my-carts" className="data-[state=active]:bg-purple-50 data-[state=active]:text-purple-700">Mis Carros</TabsTrigger>
+                                <TabsTrigger value="my-carts">Mis Carros</TabsTrigger>
                             )}
                         </TabsList>
 
-                        <div className="text-sm text-slate-500 font-medium">
+                        <div className="text-sm text-muted-foreground font-medium">
                             Mostrando {filteredCarts.length} carros
                         </div>
                     </div>
@@ -242,40 +242,42 @@ export default function TechnicianView() {
                                     <Card
                                         key={cart.id}
                                         className={cn(
-                                            "group overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-0 ring-1 ring-slate-200",
-                                            isCompleted ? "bg-white" :
-                                                isInProgress ? "bg-white ring-blue-200 shadow-blue-100" :
-                                                    "bg-white"
+                                            "group overflow-hidden border-white/70 transition-all duration-300 hover:-translate-y-1",
+                                            isCompleted
+                                                ? "bg-white/65"
+                                                : isInProgress
+                                                    ? "bg-blue-100/35 shadow-[0_24px_50px_-36px_rgba(82,139,255,0.85)]"
+                                                    : "bg-white/60"
                                         )}
                                     >
                                         <div className={cn("h-1.5 w-full",
-                                            isCompleted ? "bg-green-500" :
-                                                isInProgress ? "bg-blue-500 animate-pulse" :
-                                                    "bg-slate-200 group-hover:bg-slate-300"
+                                            isCompleted ? "bg-emerald-500" :
+                                                isInProgress ? "lavender-accent animate-pulse" :
+                                                    "bg-slate-300/60 group-hover:bg-slate-400/60"
                                         )} />
 
                                         <CardHeader className="pb-3 pt-5">
                                             <div className="flex justify-between items-start">
                                                 <div>
                                                     <div className="flex items-center gap-2 mb-1">
-                                                        <Badge variant="outline" className="text-slate-500 text-[10px] tracking-wider uppercase font-bold border-slate-200 bg-slate-50">
+                                                        <Badge variant="outline" className="text-[10px] tracking-wider uppercase font-bold">
                                                             Planta {cart.floor}
                                                         </Badge>
-                                                        {isCompleted && <Badge className="bg-green-100 text-green-700 hover:bg-green-100 border-0 text-[10px]">Listo</Badge>}
+                                                        {isCompleted && <Badge className="border-0 bg-emerald-100/90 text-emerald-700 text-[10px] hover:bg-emerald-100/90">Listo</Badge>}
                                                     </div>
-                                                    <CardTitle className="text-3xl font-bold text-slate-800 tracking-tight">{cart.name}</CardTitle>
+                                                    <CardTitle className="text-3xl font-bold text-foreground tracking-tight">{cart.name}</CardTitle>
                                                 </div>
                                                 {isCompleted ? (
-                                                    <div className="h-10 w-10 rounded-full bg-green-50 flex items-center justify-center">
-                                                        <CheckCircle2 className="h-6 w-6 text-green-500" />
+                                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100/80">
+                                                        <CheckCircle2 className="h-6 w-6 text-emerald-500" />
                                                     </div>
                                                 ) : isInProgress ? (
-                                                    <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center animate-pulse">
-                                                        <Loader2 className="h-6 w-6 text-blue-500 animate-spin" />
+                                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100/65 animate-pulse">
+                                                        <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
                                                     </div>
                                                 ) : (
-                                                    <div className="h-10 w-10 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-slate-100 transition-colors">
-                                                        <PlayCircle className="h-6 w-6 text-slate-300 group-hover:text-slate-400" />
+                                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/65 transition-colors group-hover:bg-white/80">
+                                                        <PlayCircle className="h-6 w-6 text-slate-400 group-hover:text-slate-500" />
                                                     </div>
                                                 )}
                                             </div>
@@ -283,32 +285,32 @@ export default function TechnicianView() {
 
                                         <CardContent className="pb-4">
                                             {isCompleted ? (
-                                                <div className="bg-slate-50 rounded-lg p-3 border border-slate-100">
-                                                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Completado por</div>
-                                                    <div className="font-semibold text-slate-700 flex items-center gap-2 text-sm">
-                                                        <User className="h-3.5 w-3.5 text-slate-400" />
+                                                <div className="glass-soft rounded-lg p-3">
+                                                    <div className="mb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Completado por</div>
+                                                    <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                                                        <User className="h-3.5 w-3.5 text-muted-foreground" />
                                                         {cart.latestRecord?.technician?.name || "Desconocido"}
                                                     </div>
-                                                    <div className="mt-2 text-[10px] text-slate-400 flex justify-between items-center border-t border-slate-200 pt-2">
+                                                    <div className="mt-2 flex items-center justify-between border-t border-white/65 pt-2 text-[10px] text-muted-foreground">
                                                         <span>Finalizado:</span>
                                                         <span className="font-mono">{cart.latestRecord?.endTime && new Date(cart.latestRecord.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                                                     </div>
                                                 </div>
                                             ) : isInProgress ? (
-                                                <div className="bg-blue-50/50 rounded-lg p-3 border border-blue-100">
-                                                    <div className="text-[10px] font-bold text-blue-400 uppercase tracking-wider mb-1">En proceso por</div>
-                                                    <div className="font-semibold text-blue-900 flex items-center gap-2 text-sm">
-                                                        <User className="h-3.5 w-3.5 text-blue-500" />
+                                                <div className="rounded-lg border border-blue-200/70 bg-blue-100/45 p-3 backdrop-blur-sm">
+                                                    <div className="mb-1 text-[10px] font-bold uppercase tracking-wider text-blue-500">En proceso por</div>
+                                                    <div className="flex items-center gap-2 text-sm font-semibold text-blue-900">
+                                                        <User className="h-3.5 w-3.5 text-blue-600" />
                                                         {cart.latestRecord?.technician?.name || "..."}
                                                     </div>
-                                                    <div className="mt-2 flex items-center gap-2 text-xs text-blue-600 font-medium animate-pulse">
+                                                    <div className="mt-2 flex items-center gap-2 text-xs font-medium text-blue-700 animate-pulse">
                                                         <Timer className="h-3.5 w-3.5" />
                                                         Llenando ahora...
                                                     </div>
                                                 </div>
                                             ) : (
                                                 <div className="py-2">
-                                                    <p className="text-sm text-slate-400">Este carro está pendiente de llenado.</p>
+                                                    <p className="text-sm text-muted-foreground">Este carro está pendiente de llenado.</p>
                                                 </div>
                                             )}
                                         </CardContent>
@@ -317,10 +319,10 @@ export default function TechnicianView() {
                                             {isInProgress ? (
                                                 <Button
                                                     className={cn(
-                                                        "w-full shadow-md transition-all",
+                                                        "w-full transition-all",
                                                         isMyRecord
-                                                            ? "bg-blue-600 hover:bg-blue-700 text-white shadow-blue-200"
-                                                            : "bg-slate-100 text-slate-400 hover:bg-slate-200"
+                                                            ? "lavender-accent text-white shadow-[0_12px_24px_-16px_rgba(89,106,255,0.85)] hover:brightness-105"
+                                                            : "border border-white/70 bg-white/45 text-muted-foreground hover:bg-white/65"
                                                     )}
                                                     onClick={() => isMyRecord ? handleComplete(cart) : toast.error("Este carro lo está llenando otro compañero")}
                                                     disabled={!isMyRecord}
@@ -329,7 +331,8 @@ export default function TechnicianView() {
                                                 </Button>
                                             ) : !isCompleted && (
                                                 <Button
-                                                    className="w-full bg-white border-2 border-slate-200 text-slate-700 hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50 transition-all font-semibold"
+                                                    variant="outline"
+                                                    className="w-full border-white/70 bg-white/50 font-semibold text-foreground hover:border-blue-300/80 hover:text-blue-700 hover:bg-blue-100/55"
                                                     onClick={() => openStartDialog(cart)}
                                                 >
                                                     Empezar Llenado
@@ -337,7 +340,7 @@ export default function TechnicianView() {
                                             )}
 
                                             {isCompleted && (
-                                                <Button variant="ghost" className="w-full text-green-600 font-medium hover:text-green-700 hover:bg-green-50" disabled>
+                                                <Button variant="ghost" className="w-full font-medium text-emerald-700 hover:bg-emerald-100/60 hover:text-emerald-800" disabled>
                                                     Ver Detalles
                                                 </Button>
                                             )}
@@ -348,7 +351,7 @@ export default function TechnicianView() {
                         </div>
 
                         {filteredCarts.length === 0 && (
-                            <div className="flex flex-col items-center justify-center py-20 text-slate-400 bg-white rounded-2xl border border-dashed border-slate-200 mt-6">
+                            <div className="glass-soft mt-6 flex flex-col items-center justify-center rounded-2xl border-dashed py-20 text-muted-foreground">
                                 <Filter className="h-12 w-12 mb-4 opacity-20" />
                                 <p className="text-lg font-medium">No se encontraron carros</p>
                                 <p className="text-sm">Prueba cambiando el filtro de estado</p>
@@ -363,7 +366,7 @@ export default function TechnicianView() {
                     <DialogContent className="sm:max-w-md">
                         <DialogHeader>
                             <div className="flex items-center gap-4 mb-2">
-                                <div className="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-xl border-4 border-white shadow-sm">
+                                <div className="lavender-accent flex h-12 w-12 items-center justify-center rounded-full border-4 border-white/80 text-xl font-bold text-white shadow-[0_10px_20px_-12px_rgba(89,106,255,0.85)]">
                                     {activeCart?.name.substring(0, 2)}
                                 </div>
                                 <div>
@@ -376,7 +379,7 @@ export default function TechnicianView() {
                         </DialogHeader>
                         <div className="space-y-4 py-4">
                             <div className="space-y-2">
-                                <Label htmlFor="tech-select" className="text-slate-600 font-medium">¿Quién va a llenar este carro?</Label>
+                                <Label htmlFor="tech-select" className="font-medium text-muted-foreground">¿Quién va a llenar este carro?</Label>
                                 <Select value={selectedTechForCart} onValueChange={setSelectedTechForCart}>
                                     <SelectTrigger id="tech-select" className="h-12 text-lg">
                                         <SelectValue placeholder="Selecciona tu nombre..." />
@@ -389,7 +392,7 @@ export default function TechnicianView() {
                                         ))}
                                     </SelectContent>
                                 </Select>
-                                <p className="text-xs text-slate-400 mt-1">Tu selección se recordará para el próximo carro.</p>
+                                <p className="mt-1 text-xs text-muted-foreground">Tu selección se recordará para el próximo carro.</p>
                             </div>
                         </div>
                         <DialogFooter>
@@ -397,7 +400,7 @@ export default function TechnicianView() {
                             <Button
                                 onClick={handleStart}
                                 disabled={!selectedTechForCart}
-                                className="bg-blue-600 hover:bg-blue-700 px-8"
+                                className="px-8"
                             >
                                 Confirmar e Iniciar
                             </Button>

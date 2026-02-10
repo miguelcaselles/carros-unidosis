@@ -10,14 +10,13 @@ import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { toast } from "sonner"
 import {
-    Loader2, Trash2, UserPlus, Clock, CheckCircle,
-    Activity, BarChart3, CalendarDays, Search,
+    Trash2, UserPlus, Clock, CheckCircle,
+    Activity, BarChart3, Search,
     ArrowUpRight, AlertCircle, LayoutDashboard
 } from "lucide-react"
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line
 } from 'recharts'
-import { cn } from "@/lib/utils"
 
 // Types matching the new API response
 type MonitorItem = {
@@ -65,7 +64,6 @@ export default function AdminView() {
     const [data, setData] = useState<DashboardData | null>(null)
     const [technicians, setTechnicians] = useState<Technician[]>([])
     const [newTechName, setNewTechName] = useState("")
-    const [loading, setLoading] = useState(false)
     const [searchTerm, setSearchTerm] = useState("")
 
     const handleLogin = (e: React.FormEvent) => {
@@ -79,7 +77,6 @@ export default function AdminView() {
     }
 
     const fetchData = async () => {
-        setLoading(true)
         try {
             const [statsRes, techsRes] = await Promise.all([
                 fetch("/api/admin/stats"),
@@ -88,10 +85,8 @@ export default function AdminView() {
 
             if (statsRes.ok) setData(await statsRes.json())
             if (techsRes.ok) setTechnicians(await techsRes.json())
-        } catch (error) {
+        } catch {
             toast.error("Error al cargar datos")
-        } finally {
-            setLoading(false)
         }
     }
 
@@ -121,7 +116,7 @@ export default function AdminView() {
             } else {
                 toast.error("Error al añadir")
             }
-        } catch (error) {
+        } catch {
             toast.error("Error de conexión")
         }
     }
@@ -140,7 +135,7 @@ export default function AdminView() {
             } else {
                 toast.error("Error al eliminar")
             }
-        } catch (error) {
+        } catch {
             toast.error("Error de conexión")
         }
     }
@@ -148,11 +143,11 @@ export default function AdminView() {
     const getStatusBadge = (status: string) => {
         switch (status) {
             case 'COMPLETED':
-                return <Badge className="bg-green-500 hover:bg-green-600">Completado</Badge>
+                return <Badge className="bg-emerald-500 hover:bg-emerald-600">Completado</Badge>
             case 'IN_PROGRESS':
-                return <Badge className="bg-blue-500 hover:bg-blue-600 animate-pulse">En Curso</Badge>
+                return <Badge className="lavender-accent animate-pulse hover:brightness-105">En Curso</Badge>
             default:
-                return <Badge variant="outline" className="text-slate-500">Pendiente</Badge>
+                return <Badge variant="outline" className="text-muted-foreground">Pendiente</Badge>
         }
     }
 
@@ -163,9 +158,8 @@ export default function AdminView() {
 
     if (!isAuthenticated) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-slate-50">
-                <div className="absolute inset-0 bg-grid-slate-200 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
-                <Card className="w-full max-w-sm shadow-xl border-slate-200">
+            <div className="flex min-h-screen items-center justify-center px-4">
+                <Card className="w-full max-w-sm border-white/70 shadow-[0_24px_60px_-42px_rgba(64,88,168,0.68)]">
                     <CardHeader className="space-y-1">
                         <CardTitle className="text-2xl font-bold text-center">Acceso Administrador</CardTitle>
                         <CardDescription className="text-center">Introduce tu contraseña para continuar</CardDescription>
@@ -177,9 +171,8 @@ export default function AdminView() {
                                 placeholder="Contraseña"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="bg-white"
                             />
-                            <Button type="submit" className="w-full bg-slate-900 hover:bg-slate-800">
+                            <Button type="submit" className="w-full">
                                 Entrar
                             </Button>
                         </form>
@@ -190,21 +183,21 @@ export default function AdminView() {
     }
 
     return (
-        <div className="min-h-screen bg-slate-50/50">
+        <div className="min-h-screen">
             {/* Professional Header */}
-            <header className="sticky top-0 z-30 w-full border-b bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+            <header className="sticky top-0 z-30 w-full border-b border-white/60 bg-white/50 backdrop-blur-xl">
                 <div className="container mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-8">
                     <div className="flex items-center gap-2">
-                        <div className="bg-slate-900 p-1.5 rounded-lg">
+                        <div className="lavender-accent rounded-lg p-1.5 shadow-[0_16px_30px_-18px_rgba(89,106,255,0.85)]">
                             <LayoutDashboard className="h-5 w-5 text-white" />
                         </div>
-                        <h1 className="text-xl font-bold text-slate-900">Panel de Control</h1>
+                        <h1 className="text-xl font-bold text-foreground">Panel de Control</h1>
                     </div>
                     <div className="flex items-center gap-4">
-                        <div className="text-sm text-slate-500 hidden sm:block">
+                        <div className="hidden text-sm text-muted-foreground sm:block">
                             {new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                         </div>
-                        <Button variant="ghost" size="sm" onClick={() => setIsAuthenticated(false)} className="text-slate-600 hover:text-red-600">
+                        <Button variant="ghost" size="sm" onClick={() => setIsAuthenticated(false)} className="text-muted-foreground hover:text-red-600">
                             Cerrar Sesión
                         </Button>
                     </div>
@@ -214,67 +207,67 @@ export default function AdminView() {
             <main className="container mx-auto max-w-7xl p-4 sm:p-8 space-y-8">
                 {/* KPI Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <Card className="border-l-4 border-l-green-500 shadow-sm">
+                    <Card className="border-l-4 border-l-emerald-500/90">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-600">Completados Hoy</CardTitle>
-                            <CheckCircle className="h-4 w-4 text-green-500" />
+                            <CardTitle className="text-sm font-medium text-muted-foreground">Completados Hoy</CardTitle>
+                            <CheckCircle className="h-4 w-4 text-emerald-500" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold text-slate-900">{data?.stats.totalFilled || 0}</div>
-                            <p className="text-xs text-slate-500 mt-1">Carros verificados</p>
+                            <div className="text-2xl font-bold text-foreground">{data?.stats.totalFilled || 0}</div>
+                            <p className="mt-1 text-xs text-muted-foreground">Carros verificados</p>
                         </CardContent>
                     </Card>
 
-                    <Card className="border-l-4 border-l-blue-500 shadow-sm">
+                    <Card className="border-l-4 border-l-blue-500/90">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-600">En Progreso</CardTitle>
+                            <CardTitle className="text-sm font-medium text-muted-foreground">En Progreso</CardTitle>
                             <Activity className="h-4 w-4 text-blue-500" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold text-slate-900">{data?.stats.inProgress || 0}</div>
-                            <p className="text-xs text-slate-500 mt-1">Siendo llenados ahora</p>
+                            <div className="text-2xl font-bold text-foreground">{data?.stats.inProgress || 0}</div>
+                            <p className="mt-1 text-xs text-muted-foreground">Siendo llenados ahora</p>
                         </CardContent>
                     </Card>
 
-                    <Card className="border-l-4 border-l-orange-500 shadow-sm">
+                    <Card className="border-l-4 border-l-amber-500/90">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-600">Pendientes</CardTitle>
-                            <AlertCircle className="h-4 w-4 text-orange-500" />
+                            <CardTitle className="text-sm font-medium text-muted-foreground">Pendientes</CardTitle>
+                            <AlertCircle className="h-4 w-4 text-amber-500" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold text-slate-900">{data?.stats.pending || 0}</div>
-                            <p className="text-xs text-slate-500 mt-1">Por iniciar</p>
+                            <div className="text-2xl font-bold text-foreground">{data?.stats.pending || 0}</div>
+                            <p className="mt-1 text-xs text-muted-foreground">Por iniciar</p>
                         </CardContent>
                     </Card>
 
-                    <Card className="border-l-4 border-l-purple-500 shadow-sm">
+                    <Card className="border-l-4 border-l-violet-500/90">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium text-slate-600">Tiempo Medio</CardTitle>
-                            <Clock className="h-4 w-4 text-purple-500" />
+                            <CardTitle className="text-sm font-medium text-muted-foreground">Tiempo Medio</CardTitle>
+                            <Clock className="h-4 w-4 text-violet-500" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold text-slate-900">{data?.stats.avgDuration || 0}s</div>
-                            <p className="text-xs text-slate-500 mt-1">Por carro hoy</p>
+                            <div className="text-2xl font-bold text-foreground">{data?.stats.avgDuration || 0}s</div>
+                            <p className="mt-1 text-xs text-muted-foreground">Por carro hoy</p>
                         </CardContent>
                     </Card>
                 </div>
 
                 <Tabs defaultValue="monitor" className="space-y-6">
-                    <TabsList className="bg-slate-200/50 p-1 border border-slate-200">
-                        <TabsTrigger value="monitor" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
+                    <TabsList>
+                        <TabsTrigger value="monitor">
                             <Activity className="h-4 w-4 mr-2" /> Monitor Diario
                         </TabsTrigger>
-                        <TabsTrigger value="analytics" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
+                        <TabsTrigger value="analytics">
                             <BarChart3 className="h-4 w-4 mr-2" /> Estadísticas y Gráficas
                         </TabsTrigger>
-                        <TabsTrigger value="technicians" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
+                        <TabsTrigger value="technicians">
                             <UserPlus className="h-4 w-4 mr-2" /> Gestión Técnicos
                         </TabsTrigger>
                     </TabsList>
 
                     {/* MONITOR TAB */}
                     <TabsContent value="monitor" className="space-y-4">
-                        <Card className="border-slate-200 shadow-md">
+                        <Card>
                             <CardHeader className="flex flex-row items-center justify-between">
                                 <div>
                                     <CardTitle>Estado de Planta</CardTitle>
@@ -291,10 +284,10 @@ export default function AdminView() {
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                <div className="rounded-md border">
+                                <div className="rounded-xl border border-white/70 bg-white/38 p-1 backdrop-blur-sm">
                                     <Table>
                                         <TableHeader>
-                                            <TableRow className="bg-slate-50 hover:bg-slate-50">
+                                            <TableRow className="hover:bg-transparent">
                                                 <TableHead className="w-[100px]">Carro</TableHead>
                                                 <TableHead>Estado</TableHead>
                                                 <TableHead>Técnico</TableHead>
@@ -305,13 +298,13 @@ export default function AdminView() {
                                         </TableHeader>
                                         <TableBody>
                                             {filteredMonitor?.map((item) => (
-                                                <TableRow key={item.id} className="hover:bg-slate-50/50">
-                                                    <TableCell className="font-bold text-slate-700">{item.name}</TableCell>
+                                                <TableRow key={item.id}>
+                                                    <TableCell className="font-bold text-foreground">{item.name}</TableCell>
                                                     <TableCell>{getStatusBadge(item.status)}</TableCell>
-                                                    <TableCell className="font-medium text-slate-600">{item.technicianName}</TableCell>
-                                                    <TableCell className="text-slate-500 font-mono text-xs">{item.startTime}</TableCell>
-                                                    <TableCell className="text-slate-500 font-mono text-xs">{item.endTime}</TableCell>
-                                                    <TableCell className="text-right font-mono font-medium text-slate-700">{item.duration}</TableCell>
+                                                    <TableCell className="font-medium text-muted-foreground">{item.technicianName}</TableCell>
+                                                    <TableCell className="font-mono text-xs text-muted-foreground">{item.startTime}</TableCell>
+                                                    <TableCell className="font-mono text-xs text-muted-foreground">{item.endTime}</TableCell>
+                                                    <TableCell className="text-right font-mono font-medium text-foreground">{item.duration}</TableCell>
                                                 </TableRow>
                                             ))}
                                             {filteredMonitor?.length === 0 && (
@@ -331,7 +324,7 @@ export default function AdminView() {
                     {/* ANALYTICS TAB */}
                     <TabsContent value="analytics" className="space-y-4">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                            <Card className="shadow-md">
+                            <Card>
                                 <CardHeader>
                                     <CardTitle>Carros Completados (Últimos 7 días)</CardTitle>
                                     <CardDescription>Producción diaria total</CardDescription>
@@ -346,13 +339,13 @@ export default function AdminView() {
                                                 contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
                                                 cursor={{ fill: 'rgba(0,0,0,0.05)' }}
                                             />
-                                            <Bar dataKey="count" name="Carros" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                                            <Bar dataKey="count" name="Carros" fill="#7f7eff" radius={[4, 4, 0, 0]} />
                                         </BarChart>
                                     </ResponsiveContainer>
                                 </CardContent>
                             </Card>
 
-                            <Card className="shadow-md">
+                            <Card>
                                 <CardHeader>
                                     <CardTitle>Eficiencia Promedio</CardTitle>
                                     <CardDescription>Tiempo medio de llenado por día (segundos)</CardDescription>
@@ -366,30 +359,30 @@ export default function AdminView() {
                                             <Tooltip
                                                 contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
                                             />
-                                            <Line type="monotone" dataKey="avgTime" name="Tiempo Medio (s)" stroke="#8b5cf6" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                                            <Line type="monotone" dataKey="avgTime" name="Tiempo Medio (s)" stroke="#6796ff" strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
                                         </LineChart>
                                     </ResponsiveContainer>
                                 </CardContent>
                             </Card>
 
-                            <Card className="md:col-span-2 shadow-md bg-gradient-to-r from-slate-900 to-slate-800 text-white border-none">
+                            <Card className="md:col-span-2 border-none bg-gradient-to-r from-[#8e7dff]/95 to-[#6796ff]/95 text-white shadow-[0_24px_56px_-36px_rgba(89,106,255,0.86)]">
                                 <CardContent className="p-6 flex flex-col md:flex-row items-center justify-between gap-6">
                                     <div>
                                         <h3 className="text-lg font-semibold mb-1 flex items-center gap-2">
-                                            <ArrowUpRight className="h-5 w-5 text-green-400" />
+                                            <ArrowUpRight className="h-5 w-5 text-emerald-200" />
                                             Récord del Día
                                         </h3>
-                                        <p className="text-slate-300">El llenado más rápido registrado hoy.</p>
+                                        <p className="text-blue-100/90">El llenado más rápido registrado hoy.</p>
                                     </div>
-                                    <div className="flex items-center gap-6 bg-white/10 p-4 rounded-lg backdrop-blur-sm">
+                                    <div className="flex items-center gap-6 rounded-lg border border-white/30 bg-white/14 p-4 backdrop-blur-sm">
                                         <div>
-                                            <p className="text-xs text-slate-300 uppercase tracking-wider">Técnico</p>
+                                            <p className="text-xs uppercase tracking-wider text-blue-100/80">Técnico</p>
                                             <p className="text-xl font-bold">{data?.stats.fastestRecord?.technician.name || "-"}</p>
                                         </div>
                                         <div className="h-10 w-px bg-white/20" />
                                         <div>
-                                            <p className="text-xs text-slate-300 uppercase tracking-wider">Tiempo</p>
-                                            <p className="text-xl font-bold font-mono text-green-400">{data?.stats.fastestRecord ? `${data.stats.fastestRecord.duration}s` : "-"}</p>
+                                            <p className="text-xs uppercase tracking-wider text-blue-100/80">Tiempo</p>
+                                            <p className="text-xl font-bold font-mono text-emerald-200">{data?.stats.fastestRecord ? `${data.stats.fastestRecord.duration}s` : "-"}</p>
                                         </div>
                                     </div>
                                 </CardContent>
@@ -399,7 +392,7 @@ export default function AdminView() {
 
                     {/* TECHNICIAN MANAGEMENT TAB */}
                     <TabsContent value="technicians">
-                        <Card className="shadow-md">
+                        <Card>
                             <CardHeader>
                                 <CardTitle>Gestión de Personal</CardTitle>
                                 <CardDescription>Añadir o eliminar técnicos activos del sistema</CardDescription>
@@ -407,14 +400,13 @@ export default function AdminView() {
                             <CardContent>
                                 <div className="flex flex-col md:flex-row gap-8">
                                     <div className="w-full md:w-1/3 space-y-4">
-                                        <div className="p-4 bg-slate-50 rounded-lg border border-slate-100">
+                                        <div className="rounded-xl border border-white/70 bg-white/42 p-4 backdrop-blur-sm">
                                             <h4 className="font-semibold text-sm mb-4">Añadir Nuevo Técnico</h4>
                                             <form onSubmit={handleAddTechnician} className="space-y-3">
                                                 <Input
                                                     placeholder="Nombre y Apellido"
                                                     value={newTechName}
                                                     onChange={(e) => setNewTechName(e.target.value)}
-                                                    className="bg-white"
                                                 />
                                                 <Button type="submit" className="w-full" disabled={!newTechName.trim()}>
                                                     <UserPlus className="h-4 w-4 mr-2" /> Registrar
@@ -424,7 +416,7 @@ export default function AdminView() {
                                     </div>
 
                                     <div className="w-full md:w-2/3">
-                                        <ScrollArea className="h-[400px] w-full rounded-md border p-4">
+                                        <ScrollArea className="h-[400px] w-full rounded-xl border border-white/70 bg-white/38 p-4 backdrop-blur-sm">
                                             <Table>
                                                 <TableHeader>
                                                     <TableRow>
@@ -437,9 +429,9 @@ export default function AdminView() {
                                                     {technicians.map((tech) => (
                                                         <TableRow key={tech.id}>
                                                             <TableCell className="font-medium">{tech.name}</TableCell>
-                                                            <TableCell><Badge variant="outline" className="text-green-600 border-green-200 bg-green-50">Activo</Badge></TableCell>
+                                                            <TableCell><Badge variant="outline" className="border-emerald-200/80 bg-emerald-100/70 text-emerald-700">Activo</Badge></TableCell>
                                                             <TableCell className="text-right">
-                                                                <Button variant="ghost" size="icon" onClick={() => handleDeleteTechnician(tech.id)} className="text-slate-400 hover:text-red-500">
+                                                                <Button variant="ghost" size="icon" onClick={() => handleDeleteTechnician(tech.id)} className="text-muted-foreground hover:text-red-500">
                                                                     <Trash2 className="h-4 w-4" />
                                                                 </Button>
                                                             </TableCell>
